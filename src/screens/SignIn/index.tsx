@@ -1,70 +1,70 @@
-import { Center, Heading, Image, ScrollView, Text, VStack } from 'native-base'
+import { Image, ScrollView, Text } from "react-native";
+import { Button, ButtonTitle, ButtonTrasparent, Container, FooterTitle, HeaderTitle, Input, SignInFooter, SignInForm, SignInFormTitle, SignInHeader } from "./styles";
 
-import BackgroundImg from '@assets/background.png'
-import LogoSvg from '@assets/logo.svg'
-
-import { Button } from '@components/Button'
-import { Input } from '@components/Input'
-
-import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
+import BackgroundImg from '../../assets/background.png';
+import LogoImg from '../../assets/logo.svg';
 
 export function SignIn() {
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+    return (
+        <ScrollView 
+            contentContainerStyle={{ flexGrow: 1 }} 
+            showsVerticalScrollIndicator={false}
+        >
+            <Image 
+                source={BackgroundImg}
+                alt="Pessoas treinando"
+                style={{
+                    position: 'absolute',
+                    resizeMode: 'contain'
+                }}
+            />
 
-  function handleNewAccount() {
-    navigation.navigate('signUp')
-  }
+            <Container>
+                <SignInHeader>
+                    <LogoImg />
 
-  return (
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      showsVerticalScrollIndicator={false}
-    >
-      <VStack flex={1} px={10} pb={16}>
-        <Image
-          source={BackgroundImg}
-          defaultSource={BackgroundImg}
-          alt="Pessoas treinando"
-          resizeMode="contain"
-          position="absolute"
-        />
+                    <HeaderTitle>
+                        Treine sua mente e o seu corpo.
+                    </HeaderTitle>
+                </SignInHeader>
 
-        <Center my={24}>
-          <LogoSvg />
+                <SignInForm>
+                    <SignInFormTitle>
+                        Acesse a conta
+                    </SignInFormTitle>
 
-          <Text color="gray.100" fontSize="sm">
-            Treine sua mente e o seu corpo.
-          </Text>
-        </Center>
+                    <Input>
+                        <Text style={{ color: "#7C7C8A", fontSize: 15 }}>
+                            E-mail
+                        </Text>
+                    </Input>
 
-        <Center>
-          <Heading color="gray.100" fontSize="xl" mb={6} fontFamily="heading">
-            Acesse a conta
-          </Heading>
+                    <Input>
+                        <Text style={{ color: "#7C7C8A", fontSize: 15 }}>
+                            Senha
+                        </Text>
+                    </Input>
+                    
 
-          <Input
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <Input placeholder="Senha" secureTextEntry />
+                    <Button>
+                        <ButtonTitle>
+                            Acessar
+                        </ButtonTitle>
+                    </Button>
+                </SignInForm>
 
-          <Button title="Acessar" />
-        </Center>
+                <SignInFooter>
+                    <FooterTitle>
+                        Ainda não tem acesso?
+                    </FooterTitle>
 
-        <Center mt={24}>
-          <Text color="gray.100" fontSize="sm" mb={3} fontFamily="body">
-            Ainda não tem acesso?
-          </Text>
-        </Center>
-
-        <Button
-          title="Criar Conta"
-          variant="outline"
-          onPress={handleNewAccount}
-        />
-      </VStack>
-    </ScrollView>
-  )
+                    <ButtonTrasparent>
+                        <ButtonTitle>
+                            Criar conta
+                        </ButtonTitle>
+                    </ButtonTrasparent>
+                </SignInFooter>
+            </Container>
+        </ScrollView>
+    )
 }
