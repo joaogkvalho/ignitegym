@@ -44,7 +44,11 @@ export function SignIn() {
                     </SignInFormTitle>
 
                     <Input placeholder="E-mail" />
-                    <Input placeholder="Senha" />
+
+                    <Input 
+                        placeholder="Senha"
+                        secureTextEntry
+                    />
 
                     <Button 
                         title="Acessar" 

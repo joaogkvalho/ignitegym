@@ -10,4 +10,6 @@ export const Container = styled(TextInput)`
 
     background-color: ${({ theme }) => theme.colors.gray[700]};
     border-radius: 6px;
+
+    color: ${({ theme }) => theme.colors.white};
 `
