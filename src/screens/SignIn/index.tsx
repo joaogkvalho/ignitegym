@@ -1,8 +1,9 @@
-import { Image, ScrollView, Text } from "react-native";
-import { Button, ButtonTitle, ButtonTrasparent, Container, FooterTitle, HeaderTitle, Input, SignInFooter, SignInForm, SignInFormTitle, SignInHeader } from "./styles";
+import { Image, ScrollView } from "react-native";
+import { Button, ButtonTitle, ButtonTrasparent, Container, FooterTitle, HeaderTitle, SignInFooter, SignInForm, SignInFormTitle, SignInHeader } from "./styles";
 
 import BackgroundImg from '../../assets/background.png';
 import LogoImg from '../../assets/logo.svg';
+import { Input } from "../../components/Input";
 
 export function SignIn() {
     return (
@@ -33,18 +34,8 @@ export function SignIn() {
                         Acesse a conta
                     </SignInFormTitle>
 
-                    <Input>
-                        <Text style={{ color: "#7C7C8A", fontSize: 15 }}>
-                            E-mail
-                        </Text>
-                    </Input>
-
-                    <Input>
-                        <Text style={{ color: "#7C7C8A", fontSize: 15 }}>
-                            Senha
-                        </Text>
-                    </Input>
-                    
+                    <Input placeholder="E-mail" />
+                    <Input placeholder="Senha" />
 
                     <Button>
                         <ButtonTitle>

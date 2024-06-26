@@ -33,18 +33,6 @@ export const SignInFormTitle = styled.Text`
     color: ${({ theme }) => theme.colors.gray[100]};
 `
 
-//**Transformar em componente de Input**
-export const Input = styled.View`
-    height: 56px;
-    justify-content: center;
-
-    margin-bottom: 12px;
-    padding: 16px;
-
-    background-color: ${({ theme }) => theme.colors.gray[700]};
-    border-radius: 6px;
-`
-
 //**Transformar em componente de Botão**
 export const Button = styled.TouchableOpacity`
     width: "100%";
