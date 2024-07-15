@@ -20,6 +20,6 @@ export const ExerciseTitle = styled.Text`
     color: ${({ theme }) => theme.colors.white};
 `
 export const ExerciseInfo = styled.Text`
-    font-size: ${({ theme }) => theme.fontSizes.sm};
+    font-size: ${({ theme }) => theme.fontSizes.sm}px;
     color: ${({ theme }) => theme.colors.gray[200]};
 `

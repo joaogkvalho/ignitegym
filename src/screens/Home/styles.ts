@@ -22,6 +22,6 @@ export const ExerciseListInfo = styled.View`
 
 export const ExerciseListTitle = styled.Text`
     font-family: ${({ theme }) => theme.fonts.heading};
-    font-size: ${({ theme }) => theme.fontSizes.md};
+    font-size: ${({ theme }) => theme.fontSizes.md}px;
     color: ${({ theme }) => theme.colors.gray[200]};
 `
