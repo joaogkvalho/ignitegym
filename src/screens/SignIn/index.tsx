@@ -1,18 +1,22 @@
 import { Image, ScrollView } from "react-native";
 import { Container, FooterTitle, HeaderTitle, SignInFooter, SignInForm, SignInFormTitle, SignInHeader } from "./styles";
 
+import { useNavigation } from "@react-navigation/native";
 import BackgroundImg from '../../assets/background.png';
 import LogoImg from '../../assets/logo.svg';
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { AuthNavigatorRoutesProps } from "../../routes/auth.routes";
 
 export function SignIn() {
+    const navigation = useNavigation<AuthNavigatorRoutesProps>()
+
     function handleSignIn() {
         console.log("SignIn feito!")
     }
 
     function handleCreateNewAccount() {
-        console.log("SignUp feito!")
+        navigation.navigate('signUp')
     }
 
     return (
@@ -50,7 +54,7 @@ export function SignIn() {
                         secureTextEntry
                     />
 
-                    <Button 
+                    <Button
                         title="Acessar" 
                         onPress={handleSignIn} 
                     />
