@@ -1,16 +1,19 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Text, TouchableOpacity } from "react-native";
 import { useTheme } from "styled-components/native";
+import defaultUserPhotoImg from '../../assets/userPhotoDefault.png';
+import { useAuth } from '../../hooks/useAuth';
 import { UserPhoto } from "../UserPhoto";
 import { Container, UserInfo, UserName } from "./styles";
 
 export function HomeHeader() {
     const { colors, fontSizes } = useTheme()
+    const { user, signOut } = useAuth()
 
     return (
         <Container>
             <UserPhoto 
-                source={{ uri: 'https://github.com/joaogkvalho.png' }}
+                source={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
                 size={64}
                 alt="Imagem do usuário"
             />
@@ -21,11 +24,14 @@ export function HomeHeader() {
                 </Text>
 
                 <UserName>
-                    João Gabriel
+                    {user.name}
                 </UserName>
             </UserInfo>
-            <TouchableOpacity>
-                <MaterialIcons name="logout" color={colors.gray[200]} size={28} />
+            <TouchableOpacity onPress={signOut}>
+                <MaterialIcons 
+                    name="logout" 
+                    color={colors.gray[200]} size={28} 
+                />
             </TouchableOpacity>
         </Container>
     )

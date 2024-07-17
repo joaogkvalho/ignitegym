@@ -1,22 +1,45 @@
-import { Image, ScrollView } from "react-native";
+import { Alert, Image, ScrollView } from "react-native";
 import { Container, FooterTitle, HeaderTitle, SignInFooter, SignInForm, SignInFormTitle, SignInHeader } from "./styles";
 
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import BackgroundImg from '../../assets/background.png';
 import LogoImg from '../../assets/logo.svg';
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { useAuth } from "../../hooks/useAuth";
 import { AuthNavigatorRoutesProps } from "../../routes/auth.routes";
+import { AppError } from "../../utils/AppError";
+
+type FormData = {
+    email: string
+    password: string
+}
 
 export function SignIn() {
-    const navigation = useNavigation<AuthNavigatorRoutesProps>()
+    const [isLoading, setIsLoading] = useState(false)
 
-    function handleSignIn() {
-        console.log("SignIn feito!")
-    }
+    const navigation = useNavigation<AuthNavigatorRoutesProps>()
+    
+    const { control, handleSubmit } = useForm<FormData>()
+    const { signIn } = useAuth()
 
     function handleCreateNewAccount() {
         navigation.navigate('signUp')
+    }
+
+    async function handleSignIn({ email, password }: FormData) {
+       try {
+            setIsLoading(true)
+            await signIn(email, password)            
+       } catch (error) {
+            const isAppError = error instanceof AppError
+            const title = isAppError ? error.message : 'Não foi possível entrar. Tente novamente mais tarde.'
+
+            setIsLoading(false)
+            Alert.alert(title)
+       }
     }
 
     return (
@@ -47,17 +70,43 @@ export function SignIn() {
                         Acesse a conta
                     </SignInFormTitle>
 
-                    <Input placeholder="E-mail" />
-
-                    <Input 
-                        placeholder="Senha"
-                        secureTextEntry
+                    <Controller 
+                        control={control}
+                        name="email"
+                        rules={{ required: 'Informe o e-mail' }}
+                        render={({ field: { onChange } }) => (
+                            <Input 
+                                placeholder="E-mail"
+                                keyboardType="email-address"
+                                onChangeText={onChange}
+                                autoCapitalize="none"
+                            />
+                        )}
                     />
 
+                   <Controller 
+                        control={control}
+                        name="password"
+                        rules={{ required: 'Informe a senha' }}
+                        render={({ field: { onChange } }) => (
+                            <Input 
+                                secureTextEntry
+                                placeholder="Senha"
+                                onChangeText={onChange}
+                            />
+                        )}
+                   />
+
+                   {isLoading ? (
+                        <Button 
+                            title="Carregando..."
+                        />
+                   ) : (
                     <Button
                         title="Acessar" 
-                        onPress={handleSignIn} 
+                        onPress={handleSubmit(handleSignIn)}
                     />
+                   )}
                 </SignInForm>
 
                 <SignInFooter>

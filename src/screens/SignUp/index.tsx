@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from "@react-navigation/native";
+import { useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Image, ScrollView } from "react-native";
 import * as yup from 'yup';
@@ -7,6 +8,7 @@ import BackgroundImage from "../../assets/background.png";
 import LogoImg from "../../assets/logo.svg";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { useAuth } from '../../hooks/useAuth';
 import { api } from '../../services/api';
 import { AppError } from '../../utils/AppError';
 import { Container, HeaderTitle, SignInFooter, SignInForm, SignInFormTitle, SignInHeader } from "./styles";
@@ -32,6 +34,9 @@ const signUpSchema = yup.object({
 })
 
 export function SignUp() {
+    const [isLoading, setIsLoading] = useState(false)
+    const { signIn } = useAuth()
+
     const navigation = useNavigation()
 
     function handleBack() {
@@ -47,9 +52,13 @@ export function SignUp() {
 
     async function handleSignUp({ name, email, password }: FormDataProps) {
         try {
-            const response = await api.post('/users', { name, email, password })
-            console.log(response.data)
+            setIsLoading(true)
+
+            await api.post('/users', { name, email, password })
+            await signIn(email, password)
         } catch (error) {
+            setIsLoading(false)
+
             const isAppError = error instanceof AppError
             const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde.'
 
@@ -139,10 +148,16 @@ export function SignUp() {
                         )}
                    />
 
-                    <Button
-                        title="Criar e acessar"
-                        onPress={handleSubmit(handleSignUp)}
-                    />
+                    {isLoading ? (
+                        <Button 
+                            title="Carregando..."
+                        />
+                    ) : (
+                        <Button
+                            title="Criar e acessar"
+                            onPress={handleSubmit(handleSignUp)}
+                        />
+                    )}
                 </SignInForm>
 
                 <SignInFooter>
