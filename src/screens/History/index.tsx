@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { Alert, SectionList, Text } from "react-native";
+import { Alert, SectionList, Text, View } from "react-native";
 import { useTheme } from "styled-components/native";
 import { HistoryCard } from "../../components/HistoryCard";
 import { ScreenHeader } from "../../components/ScreenHeader";
@@ -39,7 +39,14 @@ export function History() {
         <Container>
             <ScreenHeader title="Histórico de Exercícios" />
 
-            <SectionList 
+           {isLoading ? (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ color: '#fff' }}>
+                    Carregando...
+                </Text>
+            </View>
+           ) : (
+             <SectionList 
                 sections={exercises}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => <HistoryCard data={item} />}
@@ -59,6 +66,7 @@ export function History() {
                     </Text>
                 )}
             />
+           )}
         </Container>
     )
 }
