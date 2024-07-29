@@ -1,23 +1,28 @@
 import { Text, View } from "react-native";
 import { useTheme } from "styled-components/native";
+import { HistoryDTO } from "../../dtos/HistoryDTO";
 import { Container, Description, Title } from "./styles";
 
-export function HistoryCard() {
+type Props = {
+    data: HistoryDTO
+}
+
+export function HistoryCard({ data }: Props) {
     const { colors, fontSizes } = useTheme()
 
     return (
         <Container>
             <View style={{ flex: 1, marginRight: 20, gap: 4 }}>
                 <Title numberOfLines={1}>
-                    Costas
+                    {data.group}
                 </Title>
                 <Description numberOfLines={1}>
-                    Puxada frontal
+                    {data.name}
                 </Description>
             </View>
 
             <Text style={{ color: colors.gray[300], fontSize: fontSizes.md}}>
-                08:56
+                {data.hour}
             </Text>
         </Container>
     )

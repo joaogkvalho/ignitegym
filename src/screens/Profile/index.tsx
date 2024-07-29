@@ -1,23 +1,65 @@
 import { useState } from "react";
+import { Controller, useForm } from 'react-hook-form';
 import { Alert, ScrollView, Text, TouchableOpacity } from "react-native";
 import { useTheme } from "styled-components/native";
+import * as yup from 'yup';
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { ScreenHeader } from "../../components/ScreenHeader";
 import { UserPhoto } from "../../components/UserPhoto";
 import { Container, Content, Title } from "./styles";
 
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
+import { useAuth } from "../../hooks/useAuth";
+import { api } from "../../services/api";
+import { AppError } from "../../utils/AppError";
+
+type FormDataProps = {
+    name: string
+    email: string
+    password: string
+    old_password: string
+    confirm_password: string
+}
+
+const profileSchema = yup.object({
+    name: yup.string().required('Informe o nome.'),
+    password: yup.string()
+        .min(6, 'A senha deve ter pelo menos 6 dígitos.')
+        .nullable()
+        .transform((value) => !!value ? value : null),
+    confirm_password: yup.string()
+        .nullable()
+        .transform((value) => !!value ? value : null)
+        .oneOf([yup.ref('password')], 'A confirmação de senha não confere.')
+        .when('password', {
+            is: (Field: any) => Field,
+            then: (schema) => schema.nullable()
+                .required('Informe a confirmação da senha.')
+                .transform((value) => !!value ? value : null),
+        })
+})
 
 export function Profile() {
     const { sizes, colors, fontSizes } = useTheme()
     const PHOTO_SIZE = sizes[33]
 
+    const [isUpdating, setIsUpdating] = useState(false)
     const [photoIsLoading, setPhotoIsLoading] = useState(false)
     const [userPhoto, setUserPhoto] = useState(
         'https://github.com/joaogkvalho.png'
     )
+
+    const { user, updateUserProfile } = useAuth()
+    const { control, handleSubmit } = useForm<FormDataProps>({
+        defaultValues: {
+            name: user.name,
+            email: user.email
+        },
+        resolver: yupResolver(profileSchema  as any)
+    })
     
     async function handleUserPhotoSelected() {
         setPhotoIsLoading(true)
@@ -54,6 +96,27 @@ export function Profile() {
         }
     }
 
+    async function handleProfileUpdate(data: FormDataProps) {
+        try {
+            setIsUpdating(true)
+
+            const userUpdated = user
+            userUpdated.name = data.name
+
+            await api.put('/users', data)
+            await updateUserProfile(userUpdated)
+
+            Alert.alert('Perfil atualizado com sucesso')
+        } catch (error) {
+            const isAppError = error instanceof AppError
+            const title = isAppError ? error.message : 'Não foi possível atualizar os dados. Tente novamente mais tarde'
+
+            Alert.alert(title)
+        } finally {
+            setIsUpdating(false)
+        }
+    }
+
     return (
         <Container>
             <ScreenHeader title="Perfil" />
@@ -78,49 +141,104 @@ export function Profile() {
                             Alterar foto
                         </Text>
                     </TouchableOpacity>
-
-                    <Input
-                        style={{ 
-                            width: '100%', 
-                            backgroundColor: colors.gray[600] 
-                        }}
-                        placeholder="Nome" 
+                    
+                    <Controller
+                        control={control}
+                        name="name"
+                        render={({ field: { value, onChange }}) => (
+                            <Input
+                                onChangeText={onChange}
+                                value={value}
+                                style={{ 
+                                    width: '100%', 
+                                    backgroundColor: colors.gray[600] 
+                                }}
+                                placeholder="Nome" 
+                            />
+                        )}
                     />
 
-                    <Input
-                        style={{ 
-                            width: '100%', 
-                            backgroundColor: colors.gray[600] 
-                        }}
-                        placeholder="E-mail"
+                    <Controller 
+                        control={control}
+                        name="email"
+                        render={({ field: { value, onChange } }) => (
+                            <Input
+                                onChangeText={onChange}
+                                value={value}
+                                style={{ 
+                                    width: '100%',
+                                    color: colors.gray[300],
+                                    backgroundColor: colors.gray[600] 
+                                }}
+                                placeholder="E-mail"
+                            />
+                        )}
                     />
 
                     <Title>
                         Alterar senha
                     </Title>
-
-                    <Input
-                        style={{ 
-                            width: '100%', 
-                            backgroundColor: colors.gray[600] 
-                        }}
-                        placeholder="Senha antiga" 
-                        secureTextEntry
+ 
+                    <Controller 
+                        control={control}
+                        name="old_password"
+                        render={({ field: { onChange } }) => (
+                            <Input
+                                onChangeText={onChange}
+                                style={{ 
+                                    width: '100%', 
+                                    backgroundColor: colors.gray[600] 
+                                }}
+                                placeholder="Senha antiga" 
+                                secureTextEntry
+                            />
+                        )}
+                    />
+                    
+                    <Controller 
+                        control={control}
+                        name="password"
+                        render={({ field: { onChange } }) => (
+                            <Input
+                                onChangeText={onChange}
+                                style={{ 
+                                    width: '100%', 
+                                    backgroundColor: colors.gray[600] 
+                                }}
+                                placeholder="Nova senha"
+                                secureTextEntry
+                            />
+                        )}
                     />
 
-                    <Input
-                        style={{ 
-                            width: '100%', 
-                            backgroundColor: colors.gray[600] 
-                        }}
-                        placeholder="Confirme a nova senha" 
-                        secureTextEntry
+                    <Controller 
+                        control={control}
+                        name="confirm_password"
+                        render={({ field: { onChange } }) => (
+                            <Input
+                                onChangeText={onChange}
+                                style={{ 
+                                    width: '100%', 
+                                    backgroundColor: colors.gray[600] 
+                                }}
+                                placeholder="Confirme a nova senha" 
+                                secureTextEntry
+                            />
+                        )}
                     />
 
-                    <Button
-                        style={{ width: '100%', marginTop: 16 }}
-                        title="Atualizar" 
-                    />
+                    {isUpdating ? (
+                        <Button 
+                            title="Carregando..."
+                            style={{ width: '100%', marginTop: 16 }}
+                        />
+                    ) : (
+                        <Button
+                            onPress={handleSubmit(handleProfileUpdate)}
+                            style={{ width: '100%', marginTop: 16 }}
+                            title="Atualizar" 
+                        />
+                    )}
                 </Content>
             </ScrollView>
         </Container>
