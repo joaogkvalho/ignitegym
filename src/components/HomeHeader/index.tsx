@@ -3,6 +3,7 @@ import { Text, TouchableOpacity } from "react-native";
 import { useTheme } from "styled-components/native";
 import defaultUserPhotoImg from '../../assets/userPhotoDefault.png';
 import { useAuth } from '../../hooks/useAuth';
+import { api } from '../../services/api';
 import { UserPhoto } from "../UserPhoto";
 import { Container, UserInfo, UserName } from "./styles";
 
@@ -13,7 +14,11 @@ export function HomeHeader() {
     return (
         <Container>
             <UserPhoto 
-                source={user.avatar ? { uri: user.avatar } : defaultUserPhotoImg}
+                source={
+                    user.avatar
+                    ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+                    : defaultUserPhotoImg
+                }
                 size={64}
                 alt="Imagem do usuário"
             />
