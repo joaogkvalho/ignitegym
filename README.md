@@ -1,4 +1,4 @@
-<h1 align="center"> igniteteams </h1>
+<h1 align="center"> ignitegym </h1>
 
 <p align="center">
   <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
@@ -25,25 +25,34 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - TypeScript
 - React Navigation
 - Styled Components
+- React Hook Form
+- Yup
+- Axios
+- Async Storage
 
 ## 🔥 Algumas features neste projeto
 
 - React Hooks
-- Navegação com React Navigation
+- Navegação com React Navigation Bottom Tabs
 - Estilização com Styled Components
 - Armazenamento de dados com async-storage
+- Criação de formulários com react-hook-form
+- Validação de formulários com yup
+- Integração com API externa com axios
+- Upload de imagens no React Native
 
 ## ✨ Neste projeto você pode ver
 
-- Criação de grupos e times internos dentro desses grupos.
-- Formulário para a adição de novos integrantes para cada time.
-- Ao adicionar um integrante, uma listagem com todos os membros do time, contendo um botão para excluir cada membro.
-- Listagem de cada grupo criado pelo usuário.
-- Dados dos grupos e de todos os membros salvos no aparelho do usuário utilizando o async-storage.
+- Criação de conta e login do usuário feito com integração a uma API externa.
+- Listagem de exercícios baseadas em cada parte do corpo.
+- Informações de cada exercício como GIF animado com indicações de como fazer, tempo e números de séries indicadas.
+- Histórico de exercícios marcados como feito pelos usuários.
+- Edição de perfil do usuário completa com upload de imagem e outros dados.
 
 ## 💻 Projeto
 
-- Está é uma aplicação para criação e gerenciamento de grupos com times internos e integrantes separados, criada com React Native e Styled Components
+- Ignite Gym é uma aplicação para auxiliar os usuários com suas rotinas de exercícios dando indicações de como executar
+  e como escolher os exercícios de acordo com as partes do corpo, criada com React Native e Expo.
 
 ## ✅ Esse projeto foi criado ao longo do curso Ignite React Native da plataforma Rocketseat
 
